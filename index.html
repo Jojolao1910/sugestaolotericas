@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sugestão de Números para Loteria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="container mx-auto max-w-2xl p-4">
+      <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">
+        Sugestão de Números para Loteria
+      </h1>
+      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="mb-4">
+          <label for="game" class="block text-sm font-medium text-gray-700 mb-1"
+            >Escolha o jogo:</label
+          >
+          <select
+            id="game"
+            class="w-full p-2 border border-gray-300 rounded-md"
+          >
+            <option value="megasena">Mega Sena</option>
+            <option value="quina">Quina</option>
+            <option value="lotofacil">Lotofácil</option>
+            <option value="duplasena">Dupla Sena</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label
+            for="numberCount"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Quantidade de números:</label
+          >
+          <input
+            type="number"
+            id="numberCount"
+            min="6"
+            max="15"
+            value="6"
+            class="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+        <button
+          id="generateNumbers"
+          class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+        >
+          Gerar Números
+        </button>
+        <div id="result" class="mt-6 text-center"></div>
+      </div>
+
+      <!-- Nova seção com informações sobre o mecanismo de sugestão -->
+      <div class="bg-yellow-100 rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4 text-yellow-800">
+          Como funciona o mecanismo de sugestão de números:
+        </h2>
+        <ol class="list-decimal list-inside space-y-2 text-yellow-800">
+          <li>
+            Analisamos os resultados anteriores do jogo selecionado (simulado
+            neste exemplo).
+          </li>
+          <li>Identificamos os números que aparecem com mais frequência.</li>
+          <li>
+            Combinamos esses números frequentes com alguns números aleatórios.
+          </li>
+          <li>
+            Garantimos que a quantidade de números corresponda à sua escolha.
+          </li>
+        </ol>
+      </div>
+
+      <!-- Nova seção com dados analisados -->
+      <div class="bg-green-100 rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4 text-green-800">
+          Dados analisados até o final de 2024:
+        </h2>
+
+        <h3 class="text-lg font-semibold mt-4 mb-2 text-green-800">
+          Números mais frequentes:
+        </h3>
+        <ul class="list-disc list-inside space-y-1 text-green-800">
+          <li>36 e 37: Sorteados 7 vezes.</li>
+          <li>33, 57, 12, 43, 40, e 41: Sorteados 6 vezes.</li>
+          <li>9 e 38: Sorteados 5 vezes.</li>
+        </ul>
+
+        <h3 class="text-lg font-semibold mt-4 mb-2 text-green-800">
+          Proporção de pares e ímpares:
+        </h3>
+        <ul class="list-disc list-inside space-y-1 text-green-800">
+          <li>Pares: 109 números.</li>
+          <li>Ímpares: 107 números.</li>
+          <li>A distribuição é praticamente equilibrada.</li>
+        </ul>
+
+        <h3 class="text-lg font-semibold mt-4 mb-2 text-green-800">
+          Distribuição por intervalos:
+        </h3>
+        <ul class="list-disc list-inside space-y-1 text-green-800">
+          <li>1-10: 37 números.</li>
+          <li>11-20: 37 números.</li>
+          <li>21-30: 32 números.</li>
+          <li>31-40: 43 números (maior frequência).</li>
+          <li>41-50: 34 números.</li>
+          <li>51-60: 33 números.</li>
+        </ul>
+      </div>
+
+      <!-- Aviso para o usuário -->
+      <div class="bg-red-100 rounded-lg p-4">
+        <p class="text-sm text-red-800 italic">
+          Lembre-se de que este é um exemplo simplificado e que jogos de loteria
+          são baseados em chance aleatória. Nenhum método de previsão pode
+          garantir resultados em jogos de azar.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // Configurações dos jogos
+      const gameConfigs = {
+        megasena: { min: 1, max: 60, defaultCount: 6 },
+        quina: { min: 1, max: 80, defaultCount: 5 },
+        lotofacil: { min: 1, max: 25, defaultCount: 15 },
+        duplasena: { min: 1, max: 50, defaultCount: 6 },
+      };
+
+      // Função para gerar números aleatórios únicos
+      function generateUniqueRandomNumbers(min, max, count) {
+        const numbers = new Set();
+        while (numbers.size < count) {
+          numbers.add(Math.floor(Math.random() * (max - min + 1)) + min);
+        }
+        return Array.from(numbers).sort((a, b) => a - b);
+      }
+
+      // Função simulada para analisar resultados anteriores
+      function analyzeResults(game) {
+        const { min, max } = gameConfigs[game];
+        return generateUniqueRandomNumbers(min, max, 10);
+      }
+
+      // Função para gerar sugestão de números
+      function suggestNumbers(game, count) {
+        const analyzedNumbers = analyzeResults(game);
+        const { min, max } = gameConfigs[game];
+
+        let suggestedNumbers = new Set(
+          analyzedNumbers.slice(0, Math.min(count, analyzedNumbers.length))
+        );
+
+        while (suggestedNumbers.size < count) {
+          suggestedNumbers.add(
+            Math.floor(Math.random() * (max - min + 1)) + min
+          );
+        }
+
+        return Array.from(suggestedNumbers).sort((a, b) => a - b);
+      }
+
+      // Função para exibir números sugeridos
+      function displaySuggestedNumbers(numbers) {
+        return numbers
+          .map((num) => `<span class="number-circle">${num}</span>`)
+          .join("");
+      }
+
+      // Seleção de elementos do DOM
+      const gameSelect = document.getElementById("game");
+      const numberCountInput = document.getElementById("numberCount");
+      const generateButton = document.getElementById("generateNumbers");
+      const resultDiv = document.getElementById("result");
+
+      // Event listener para o botão de gerar números
+      generateButton.addEventListener("click", () => {
+        const game = gameSelect.value;
+        const numberCount = parseInt(numberCountInput.value);
+
+        if (
+          isNaN(numberCount) ||
+          numberCount < gameConfigs[game].min ||
+          numberCount > gameConfigs[game].max
+        ) {
+          resultDiv.innerHTML =
+            '<p class="error">Por favor, insira um número válido.</p>';
+          return;
+        }
+
+        const suggestedNumbers = suggestNumbers(game, numberCount);
+        resultDiv.innerHTML =
+          "<h3>Números Sugeridos:</h3>" +
+          displaySuggestedNumbers(suggestedNumbers);
+      });
+
+      // Atualizar os valores de entrada de acordo com o jogo selecionado
+      gameSelect.addEventListener("change", (e) => {
+        const game = e.target.value;
+        const { min, max, defaultCount } = gameConfigs[game];
+        numberCountInput.min = min;
+        numberCountInput.max = max;
+        numberCountInput.value = defaultCount;
+      });
+
+      // Inicializar o campo de entrada
+      numberCountInput.value = gameConfigs.megasena.defaultCount;
+    </script>
+
+    <style>
+      .number-circle {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        background-color: #007bff;
+        color: white;
+        border-radius: 50%;
+        margin: 5px;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </body>
+</html>
